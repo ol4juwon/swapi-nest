@@ -28,7 +28,7 @@
 - [x] Setup Server
 - [x] Deploy to Heroku
 - [ ] Get Comment Counts
-- [ ] Character Query options( Filter by gender, sort by name and height in asc or desc order)
+- [x] Character Query options( Filter by gender, sort by name and height in asc or desc order)
 
 
 ## Links
