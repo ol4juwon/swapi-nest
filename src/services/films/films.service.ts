@@ -33,7 +33,7 @@ export class SWAPIService {
       );
       return response.data.results;
     } catch (err) {
-      console.log(err + ' \n\n');
+      //   console.log(err + ' \n\n');
       if (err.response) {
         return { error: err.response.data };
       }
