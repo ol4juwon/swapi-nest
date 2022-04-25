@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Comments } from '../comments.entity';
 
 @Injectable()
@@ -29,17 +29,14 @@ export class CommentsService {
     console.log('Comments', 'comments');
     return comments;
   }
-  async findByEpisodeId(id: number): Promise<any> {
+  async findbyEpisode(episode_id: number): Promise<Comments[]> {
     let comments = [];
     try {
-      comments = await this.commentsRepository.find({
-        where: {
-          film_id: id,
-        },
-      });
+      //   comments = await this.commentsRepository.findBy( episode_id);
       comments = await this.sortByRecentFirst(comments);
     } catch (err) {
       console.log(err.message);
+      return [];
     }
   }
   async countFilmComments(id: number): Promise<any> {

@@ -1,13 +1,26 @@
-import { Body, Controller, Get, Ip, Post, Req, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Ip,
+  Param,
+  Post,
+  Req,
+  Request,
+  Response,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { Comments } from '../comments.entity';
 import { RealIp } from 'nestjs-real-ip';
+import { ApiOkResponse } from '@nestjs/swagger';
+// import { Film } from 'src/films/films.entity';
 
 @Controller('api/v1/comments')
 export class CommentsController {
   constructor(private commentService: CommentsService) {}
 
   @Get()
+  @ApiOkResponse({ status: 200, type: Comments, isArray: true })
   async index(@Request() req): Promise<any> {
     console.log(
       'inside controller',
@@ -18,8 +31,21 @@ export class CommentsController {
     const comments = await this.commentService.findAll();
     return comments;
   }
+  @Get('film/:id/get')
+  @ApiOkResponse({ status: 200, type: Comments })
+  async findById(@Param('id') id: number): Promise<any> {
+    const comments = await this.commentService.findbyEpisode(id);
+    return comments;
+  }
+
   @Post('film/:id/add')
-  async create(@Request() req, @RealIp() Ip, @Body() body): Promise<any> {
+  @ApiOkResponse({ status: 201, type: Comments })
+  async create(
+    @Request() req,
+    @RealIp() Ip,
+    @Response() res,
+    @Body() body,
+  ): Promise<any> {
     console.log(
       'inside controller',
       Ip,
@@ -42,14 +68,14 @@ export class CommentsController {
           error: error,
         };
         console.log(response, '<== error');
-        return response;
+        return res.status(401).send(response);
       }
       response = {
         message: 'Comment added',
         createdComment: data,
       };
       console.log('dd', response);
-      return response;
+      return res.status(201).send(response);
     } catch (err) {
       console.log('repl', err.message);
       console.log('error', err.message);
