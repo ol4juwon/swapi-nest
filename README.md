@@ -5,6 +5,7 @@
 - Typescript
 - Mysql
 - Expressjs
+- Docker
 - Redis
 ## Endpoints
 - Films [/films]
@@ -33,7 +34,7 @@
 ## Links
 - [Home](https://swapi-dev.herokuapp.com)
 - [Api v1 Base URl](https://swapi-dev.herokuapp.com/api/v1)
-
+- [Docker image](https://docker.io/olajuwon/swapi-dev)
 
 ## Installation instructions
 - Download the code from github (Main branch)
