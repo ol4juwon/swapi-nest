@@ -94,10 +94,26 @@ export class CharactersController {
       //   console.log(acc, curr.height);
       return parseInt(acc) + parseInt(curr.height);
     }, 0);
+    const convertheighttoFeet = this.convertcmtoFeet(totalHeight);
+    const convertToStringformat = await this.convertFeetinDecimalToftinches(
+      await convertheighttoFeet,
+    );
     res.status(200).send({
       message: 'Request successful',
       character: sendCharacters,
-      totalHeight,
+      totalHeight: {
+        totalHeight: totalHeight + 'cm',
+        heightinFeet: convertToStringformat,
+      },
     });
+  }
+  async convertcmtoFeet(height: number): Promise<number> {
+    const convertheighttoFeet = height / 30.48;
+    return convertheighttoFeet;
+  }
+  async convertFeetinDecimalToftinches(height: number): Promise<string> {
+    const feet = Math.floor(height);
+    const inches = Math.round((height - feet) * 12);
+    return feet + 'ft ' + inches + 'inches';
   }
 }
