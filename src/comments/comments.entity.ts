@@ -1,5 +1,4 @@
-import { MaxLength, MinLength } from 'class-validator';
-import { timestamp } from 'rxjs';
+import { IsNumber, IsPositive, MaxLength, MinLength } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
 @Entity()
@@ -12,6 +11,7 @@ export class Comments extends BaseEntity {
 
   @Column()
   @MinLength(1)
+  @IsPositive()
   film_id: number;
 
   @Column({
@@ -23,4 +23,7 @@ export class Comments extends BaseEntity {
   @Column()
   @MaxLength(500)
   content: string;
+
+  @Column()
+  ip_address: string;
 }

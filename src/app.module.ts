@@ -8,6 +8,7 @@ import { CommentsModule } from './comments/comments.module';
 import { ConfigModule } from '@nestjs/config';
 import { MysqlDBConfigService } from './MysqlConfig';
 import { SWAPIService } from './services/films/films.service';
+import { CharactersModule } from './characters/characters.module';
 @Module({
   imports: [
     HttpModule,
@@ -18,6 +19,7 @@ import { SWAPIService } from './services/films/films.service';
     }),
     FilmsModule,
     CommentsModule,
+    CharactersModule,
   ],
   controllers: [AppController],
   providers: [AppService, SWAPIService],

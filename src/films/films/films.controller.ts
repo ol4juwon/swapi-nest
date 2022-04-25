@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  Res,
+  Response,
 } from '@nestjs/common';
 import { Film } from '../films.entity';
 import { FilmsService } from './films.service';
 import { SWAPIService } from 'src/services/films/films.service';
+import { CommentsService } from '../../comments/comments/comments.service';
 
 @Controller('api/v1/films')
 export class FilmsController {
@@ -18,10 +21,14 @@ export class FilmsController {
     private swapiService: SWAPIService,
   ) {}
   @Get()
-  async index(): Promise<any> {
+  async index(@Response() res): Promise<any> {
     const movies = await this.swapiService.getFilms();
-    // console.log('movies', await movies);
+    if (movies.error) {
+      return res.status(400).send({ error: 'Error fetching films' });
+    }
+
     let sendMovies = [];
+
     sendMovies = movies.map((movie) => {
       const film = new Film();
       film.title = movie.title;
@@ -34,17 +41,17 @@ export class FilmsController {
       film.url = movie.url;
       return film;
     });
-
-    return sendMovies;
-    // return sendMovies.map((movie) => {
-    //   return {
-    //     title: movie.title,
-    //     opening_crawl: movie.opening_crawl,
-    //     director: movie.director,
-    //     producer: movie.producer,
-    //     release_date: movie.release_date,
-    //   };
-    // });
+    const sorted = sendMovies.sort((a, b) => {
+      console.log(a.release_date, b.release_date);
+      return (
+        new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
+      );
+    });
+    return res.status(202).send({
+      message: 'Films successfully fetched',
+      movies: sorted,
+      count: sendMovies.length,
+    });
   }
   @Post('create')
   async create(@Body() filmData: Film): Promise<any> {

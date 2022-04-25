@@ -29,13 +29,46 @@ export class CommentsService {
     console.log('Comments', 'comments');
     return comments;
   }
-
-  async create(comments: Comments): Promise<Comments> {
-    console.log(comments);
+  async findByEpisodeId(id: number): Promise<any> {
+    let comments = [];
     try {
-      return await this.commentsRepository.save(comments);
+      comments = await this.commentsRepository.find({
+        where: {
+          film_id: id,
+        },
+      });
+      comments = await this.sortByRecentFirst(comments);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+    }
+  }
+  async countFilmComments(id: number): Promise<any> {
+    const count = 0;
+    console.log(id);
+    try {
+      //   count = this.commentsRepository.findAndCountBy({ film_id: id });
+      return count;
+    } catch (err) {
+      //   console.log(err.message);
+      return 0;
+    }
+  }
+
+  async create(comments: Comments): Promise<any> {
+    // console.log(comments);
+    try {
+      const commentc = await this.commentsRepository.save(comments);
+      return { data: commentc };
+    } catch (err) {
+      console.log(err.message, '=>' + err.code, 'error', '\n\n' + err);
+      if (err.code === 'ER_DUP_ENTRY') {
+        return new Error('Duplicate Entry');
+      }
+      if (err.code === 'ER_BAD_NULL_ERROR') {
+        const columnwithbadvalue = err.message.split("'")[1];
+        console.log('bad table ', columnwithbadvalue);
+        return { error: `invalid value in column - ${columnwithbadvalue}` };
+      }
     }
   }
 }
